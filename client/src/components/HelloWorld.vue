@@ -17,12 +17,12 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-lg-12">
-                <form id="login-form" v-on:submit.prevent="onSubmit" role="form" style="display: block;">
+                <form id="login-form" v-on:submit.prevent="doLogin" role="form" style="display: block;">
                   <div class="form-group">
-                    <input type="email" name="email" id="email" tabindex="1" class="form-control" v:model="login.email" placeholder="Email" value="">
+                    <input type="email" name="email" id="email" tabindex="1" class="form-control" v-model="login.email" placeholder="Email" value="">
                   </div>
                   <div class="form-group">
-                    <input type="password" name="password" id="password" tabindex="2" class="form-control" v:model="login.password" placeholder="Password">
+                    <input type="password" name="password" id="password" tabindex="2" class="form-control" v-model="login.password" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <div class="row">
@@ -32,18 +32,18 @@
                     </div>
                   </div>
                 </form>
-                <form id="register-form" action="/beranda" method="post" role="form" style="display: none;">
+                <form id="register-form" v-on:submit.prevent="doRegister" role="form" style="display: none;">
                   <div class="form-group">
-                    <input type="text" name="first_name" id="first_name" tabindex="1" class="form-control" placeholder="First Name" value="">
+                    <input type="text" name="first_name" id="first_name" tabindex="1" class="form-control" v-model="register.first_name" placeholder="First Name" value="">
                   </div>
                   <div class="form-group">
-                    <input type="text" name="last_name" id="last_name" tabindex="1" class="form-control" placeholder="Last Name" value="">
+                    <input type="text" name="last_name" id="last_name" tabindex="1" class="form-control" v-model="register.last_name"placeholder="Last Name" value="">
                   </div>
                   <div class="form-group">
-                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                    <input type="email" name="email" id="email" tabindex="1" class="form-control" v-model="register.email" placeholder="Email Address" value="">
                   </div>
                   <div class="form-group">
-                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                    <input type="password" name="password" id="password" tabindex="2" class="form-control" v-model="register.password" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <div class="row">
@@ -65,35 +65,49 @@
 
 
 <script>
-import axios from "axios";
 
 export default {
   name: 'HelloWorld',
   data () {
     return {
       login: {
-        username: '',
+        email: '',
         password: ''
       },
       register: {
-        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
         password: ''
       }
     }
   },
   methods: {
-    onSubmit() {
-      this.$http.post('http://localhost:3000/api/login',{
-        email: this.email,
-        password: this.password,
-        "headers": { "content-type": "application/json" }
+    doLogin() {
+      var self = this
+      this.$http.post('/login',{
+        email: self.login.email,
+        password: self.login.password
       }).then((response) => {
-        console.log(response);
         localStorage.setItem("token", response.data.token)
       }).catch((err) => {
         console.log(err);
       })
 
+    },
+
+    doRegister(){
+      var self = this
+      this.$http.post('/register',{
+        first_name: self.register.first_name,
+        last_name: self.register.last_name,
+        email: self.register.email,
+        password: self.register.password
+      }).then((response) => {
+        alert('Sukses Register');
+      }).catch((err) => {
+        console.log(err);
+      })
     }
   }
 }

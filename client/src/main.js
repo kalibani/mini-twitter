@@ -1,13 +1,15 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-
-import VueResource from 'vue-resource'
+import axios from "axios";
 import App from './App'
 import router from './router'
 var $ = require("jquery");
 
-Vue.use(VueResource);
+var my_axios = axios.create({
+  baseURL: 'http://localhost:3000/api',
+});
+Vue.prototype.$http = my_axios
 
 Vue.config.productionTip = false
 
@@ -31,7 +33,6 @@ $(function() {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
   router,
   template: '<App/>',
   components: { App }
