@@ -4,15 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var cors = require('cors')
-var user = require('./routes/user');
-
+var cors = require('cors');
+require('dotenv').config();
+var auth = require('./routes/auth');
+var users = require('./routes/users');
+var twitter = require('./routes/twitter');
+var mongoose = require('mongoose');
 
 var app = express();
 
+//mongoose connect
+mongoose.connection.openUri('mongodb://localhost/minitwitter', (err) => {
+ err ? console.log(err) : console.log('Database Connected to minitwitter');
+})
+mongoose.Promise = global.Promise;
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -21,9 +30,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors())
-app.use('/api', user);
+app.use(cors());
 
+app.use('/api/auth', auth);
+app.use('/api/users', users);
+app.use('/api/twitter', twitter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

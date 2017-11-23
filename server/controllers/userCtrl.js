@@ -1,87 +1,55 @@
-const models = require('../models');
+const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-class Data {
-
-  static signup(req, res){
-    models.User.create({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      password: req.body.password,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    })
-   .then(()=>{
-    //  console.log(dataUsers);
-     res.send('Berhasil Registrasi')
-   })
-   .catch(err=>{
-     res.json(err)
-   })
-  }
-
-  static signin(req, res){
-    models.User.findOne({
-      where:{
-        email: req.body.email
-      }
-    })
-    .then((dataUsers)=>{
-      if(!dataUsers){
-        res.send('Email Tidak Terdaftar Silakan Registrasi Dulu')
-      } else if (bcrypt.hashSync(req.body.password, dataUsers.secret)===dataUsers.password) {
-        let token = jwt.sign({
-          exp: Math.floor(Date.now() / 1000) + (60 * 60),
-          dataUsers
-        }, 'Pixel Studio Secret')
-        res.json({
-          message:"Berhasil Login",
-          token: token
-        })
-      }else if (bcrypt.hashSync(req.body.password, dataUsers.secret)!==dataUsers.password) {
-        res.send('Password Salah!')
-      }
-    })
-    .catch(err=>{
-      res.send(err)
-    })
-  }
+class UserAPI {
 
   static validate(req, res, next){
     var token = req.headers['authorization'];
     if (token) {
-      jwt.verify(token, 'Pixel Studio Secret', function (err, decoded) {
+      jwt.verify(token, process.env.SECRET, function (err, decoded) {
         if(err){
           return res.json({success: false, message: 'Problem With Token'})
         }else {
           req.decoded = decoded
           next()
         }
-      });
-
+      })
     } else {
       return res.status(403).send({
-        message: 'Token tidak tersedia'
+        message: 'Access Denied!'
       })
     }
   }
 
-  static findAll(req, res){
-    models.User.findAll()
-    .then(dataUsers=>{
-      res.json(dataUsers)
-    })
-    .catch(err=>{
-      res.json(err)
-    })
+  static getProfile(req, res){
+    res.json(req.decoded.dataUser)
   }
 
-  static profile(req, res){
-    res.json(req.decoded.dataUsers)
+  static getUserbyId(req, res){
+    User.findById(req.params.id).then((dataUser) => {
+      res.status(200).json(dataUser)
+    })
+    .catch((err) => { res.status(404).send(err)})
+  }
+
+  static updateProfile(req, res) {
+    User.findById(req.params.id)
+    .then((data) => {
+      return Object.assign(data, req.body)
+    })
+    .then((data) => {
+      var salt = bcrypt.genSaltSync(8)
+      data.password = bcrypt.hashSync(req.body.password, salt)
+      return data.save()
+    })
+    .then((updatedUser) => {
+      res.json({message: 'Succesfully Updated User', updatedUser})
+    }).catch((err) => {
+      res.send(err);
+    })
   }
 
 }
 
-module.exports = Data;
+module.exports = UserAPI;
