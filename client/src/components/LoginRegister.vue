@@ -62,53 +62,80 @@
 
 
 <script>
+  import swal from 'sweetalert'
+  import $ from 'jquery'
 
-export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      login: {
-        email: '',
-        password: ''
-      },
-      register: {
-        email: '',
-        password: '',
-        name: ''
-      },
-      show: false
-    }
-  },
-  methods: {
-    doLogin() {
-      var self = this
-      this.$http.post('/auth/login', this.login)
-      .then((response) => {
-        if(!response.data.token){
-          alert(response.data)
-        }else{
-          localStorage.setItem("token", response.data.token)
-          alert(response.data.message)
-        }
-        location.reload()
-      }).catch((err) => {
-        alert(err);
-      })
-
+  export default {
+    name: 'LoginRegister',
+    data () {
+      return {
+        login: {
+          email: '',
+          password: ''
+        },
+        register: {
+          email: '',
+          password: '',
+          name: ''
+        },
+        show: false
+      }
     },
 
-    doRegister(){
-      var self = this
-      this.$http.post('/auth/register', this.register)
-      .then((response) => {
-        alert('Register Success');
-        location.reload()
-      }).catch((err) => {
-        console.log(err);
-      })
+    methods: {
+      doLogin() {
+        var self = this
+        this.$http.post('/auth/login', this.login)
+        .then((response) => {
+          if(!response.data.token){
+            swal({
+              title: 'Ooops',
+              text: response.data,
+              icon: 'error',
+              button: 'What!?'})
+          }else{
+            localStorage.setItem("token", response.data.token)
+            this.$router.push('/home')
+          }
+        }).catch((err) => {
+          swal(err);
+        })
+
+      },
+
+      doRegister(){
+        var self = this
+        this.$http.post('/auth/register', this.register)
+        .then((response) => {
+          swal({
+            icon: 'success',
+            text: response.data.message,
+            button: 'OK!'
+          })
+        }).catch((err) => {
+          console.log(err);
+        })
+      }
     }
   }
-}
+
+  // Jquery for login and register panel//
+  $(function() {
+    $('#login-form-link').click(function(e) {
+    $("#login-form").delay(100).fadeIn(100);
+    $("#register-form").fadeOut(100);
+    $('#register-form-link').removeClass('active');
+    $(this).addClass('active');
+    e.preventDefault();
+    });
+    $('#register-form-link').click(function(e) {
+      $("#register-form").delay(100).fadeIn(100);
+      $("#login-form").fadeOut(100);
+      $('#login-form-link').removeClass('active');
+      $(this).addClass('active');
+      e.preventDefault();
+    });
+  })
 
 </script>
 
