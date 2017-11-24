@@ -17,7 +17,20 @@ export default new Router({
     {
       path: '/home',
       name: 'Home',
-      component: Home
+      component: Home,
+      beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('token')
+        if (token) {
+          next()
+        }else {
+          swal({
+            title: 'Ooops',
+            text: `You don't Have Access! `,
+            icon: 'error',
+            button: 'What!?'
+          })
+        }
+      }
     }
   ]
 })

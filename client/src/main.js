@@ -4,6 +4,7 @@ import Vue from 'vue'
 import axios from "axios";
 import App from './App'
 import router from './router'
+import swal from 'sweetalert'
 
 var my_axios = axios.create({
   baseURL: 'http://localhost:3000/api',

@@ -1,24 +1,26 @@
 <template lang="html">
   <div class="well well-lg">
-    <ul>
-      <li class="clearfix"
-      v-for="(val, key, index) in Twitss">
-        <img style="float:left;"class="media-object img-circle" width="80px" src="https://8share-production-my.s3.amazonaws.com/campaigns/4898/photos/profile/thumb_copy.png?1397732185">
-        <div class="legend-info" v-if="val.posted_by._id!==Users._id">
-          <strong> {{ val.posted_by.email }}</strong>
-          <p>Help share a cause and do good.</p>
-        </div>
-      </li>
+    <div v-for="val in Twitss">
+      <ul v-if="val.posted_by._id!==Users._id">
+        <li class="clearfix">
+          <img style="float:left;"class="media-object img-circle" width="80px" :src="val.posted_by.image">
+          <div class="legend-info" style="width: 90%;">
+            <strong> {{ val.posted_by.name }}</strong>
+            <p>{{ val.twit }}</p>
+          </div>
+        </li>
+      </ul>
       <br>
-      <li class="clearfix" style="border-top: 1px solid #C0CAE3;">
-        <br>
-        <img style="float:right;" class="media-object img-circle" width="80px" src="https://8share-production-my.s3.amazonaws.com/campaigns/4898/photos/profile/thumb_copy.png?1397732185">
-        <div class="legend-info" style="float:right;">
-          <strong>Social Good</strong>
-          <p>Help share a cause and do good</p>
-        </div>
-      </li>
-    </ul>
+      <ul v-if="val.posted_by._id===Users._id">
+        <li class="clearfix">
+          <img style="float:right;" class="media-object img-circle" width="80px" :src="val.posted_by.image">
+          <div class="legend-info" style="float:right;">
+            <strong> {{ val.posted_by.name }}</strong>
+            <p style="width:90%;">{{ val.twit }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -34,18 +36,6 @@
       this.getAllTwitt(),
       this.getProfile()
     },
-
-    // computed: {
-    //   filteredUsers() {
-    //     var self = this
-    //     for (var i = 0; i < self.Twitss.length; i++) {
-    //       if (self.Users._id===self.Twitts[i]._id) {
-    //
-    //       }
-    //     }
-    //
-    //   }
-    // },
 
     methods:{
       getAllTwitt(){
@@ -127,7 +117,6 @@
   display: block;
   height: 48px;
   width: 49px;
-  float: left;
   }
   .well-lg li em.extra {
   background-position: -118px 0;
@@ -139,7 +128,6 @@
   .well-lg li .legend-info {
   float: left;
   margin-left: 10px;
-  width: 155px;
   }
 
   .well-lg strong {
@@ -148,7 +136,7 @@
   }
 
   p {
-    margin: 4px;
+    margin: 10px;
   }
   strong {
   font-weight: bold;

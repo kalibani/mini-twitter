@@ -94,8 +94,15 @@
               icon: 'error',
               button: 'What!?'})
           }else{
+            swal({
+              icon: 'success',
+              text: response.data.message,
+              timer: 1000
+            })
             localStorage.setItem("token", response.data.token)
-            this.$router.push('/home')
+            setTimeout(function(){
+              self.$router.push('/home')
+            }, 1100);
           }
         }).catch((err) => {
           swal(err);
