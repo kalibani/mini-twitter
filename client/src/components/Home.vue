@@ -10,12 +10,12 @@
             </a>
             <div class="media-body">
               <div class="form-group" style="padding:12px;">
-                <textarea class="form-control animated" v-model="Twitt.twit" placeholder="Update your status"></textarea>
-                <button class="btn btn-info pull-right" style="margin-top:10px" @click="onSubmit" type="button">Share</button>
+                <textarea class="form-control animated" v-model="Twitt.twit" v-on:keydown.enter="onSubmit" placeholder="Update your status"></textarea>
+                <button class="btn btn-info pull-right" style="margin-top:10px" v-on:click="onSubmit" type="button">Share</button>
               </div>
             </div>
           </div>
-        </div>  
+        </div>
 	    </div>
     </div>
     <appBody/>
@@ -34,18 +34,18 @@
     },
     data(){
       return {
-        Twitt: { twit:'' }
-      }
-    },
-    methods:{
-      onSubmit(){
-        this.$http.post('/twitter/post',this.Twitt,
-        {
+        Twitt: { twit:'' },
+        Headers:{
           headers:{
             Authorization : localStorage.getItem('token'),
             contentType : "application/x-www-form-urlencoded"
           }
-        })
+        }
+      }
+    },
+    methods:{
+      onSubmit(){
+        this.$http.post('/twitter/post',this.Twitt, this.Headers)
         .then((response) => {
           location.reload()
           console.log('Succesfully add todo');

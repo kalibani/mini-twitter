@@ -37,7 +37,7 @@
                     <input type="email" name="email" id="email" tabindex="1" class="form-control" v-model="register.email" placeholder="email" required>
                   </div>
                   <div class="form-group">
-                    <input type="password" name="password" id="password" tabindex="2" class="form-control" v-model="register.password" placeholder="Password" required>
+                    <input type="password" name="password" id="password" tabindex="2" class="form-control" v-model="register.password" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <input type="text" name="name" id="name" tabindex="1" class="form-control" v-model="register.name"placeholder="Name" required>
@@ -84,7 +84,7 @@
 
     methods: {
       doLogin() {
-        var self = this
+        let self = this
         this.$http.post('/auth/login', this.login)
         .then((response) => {
           if(!response.data.token){
@@ -111,7 +111,6 @@
       },
 
       doRegister(){
-        var self = this
         this.$http.post('/auth/register', this.register)
         .then((response) => {
           swal({

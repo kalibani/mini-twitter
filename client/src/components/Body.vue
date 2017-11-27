@@ -1,25 +1,29 @@
 <template lang="html">
   <div class="well well-lg">
-    <div v-for="val in Twitss">
-      <ul v-if="val.posted_by._id!==Users._id">
-        <li class="clearfix">
-          <img style="float:left;"class="media-object img-circle" width="80px" :src="val.posted_by.image">
-          <div class="legend-info" style="width: 90%;">
-            <strong> {{ val.posted_by.name }}</strong>
-            <p>{{ val.twit }}</p>
-          </div>
-        </li>
-      </ul>
+    <div>
+      <div v-for="val in Twitss">
+        <ul>
+          <li class="clearfix">
+            <img style="float:left;"class="media-object img-circle" width="80px" :src="val.posted_by.image">
+            <div class="legend-info" style="width: 90%;">
+              <strong> {{ val.posted_by.name }}</strong>
+              <p>{{ val.twit }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
       <br>
-      <ul v-if="val.posted_by._id===Users._id">
-        <li class="clearfix">
-          <img style="float:right;" class="media-object img-circle" width="80px" :src="val.posted_by.image">
-          <div class="legend-info" style="float:right;">
-            <strong> {{ val.posted_by.name }}</strong>
-            <p style="width:90%;">{{ val.twit }}</p>
-          </div>
-        </li>
-      </ul>
+      <div  v-for="twit in TwitBy">
+        <ul>
+          <li class="clearfix">
+            <img style="float:right;" class="media-object img-circle" width="80px" :src="twit.posted_by.image">
+            <div class="legend-info" style="float:right;">
+              <strong> {{ twit.posted_by.name }}</strong>
+              <p style="width:90%;">{{ twit.twit }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -28,37 +32,46 @@
   export default {
     data(){
       return {
+        dataTwits:[],
+        Users:[],
+        TwitBy:[],
         Twitss:[],
-        Users:[]
+        Headers:{
+          headers:{
+            Authorization : localStorage.getItem('token'),
+            contentType : "application/x-www-form-urlencoded"
+          }
+        }
       }
     },
+
+    mounted(){
+      this.getAllTwitt()
+    },
+
     created(){
-      this.getAllTwitt(),
       this.getProfile()
     },
 
     methods:{
       getAllTwitt(){
-        this.$http.get('/twitter/home',{
-          headers:{
-            Authorization : localStorage.getItem('token'),
-            contentType : "application/x-www-form-urlencoded"
+        var self = this
+        this.$http.get('/twitter/home', this.Headers).then((response) => {
+          this.dataTwits = response.data
+          for (var i = 0; i < this.dataTwits.length; i++) {
+            if (this.dataTwits[i].posted_by._id == this.Users._id) {
+              this.TwitBy.push(this.dataTwits[i])
+            }else {
+              this.Twitss.push(this.dataTwits[i])
+            }
           }
-        }).then((response) => {
-          this.Twitss = response.data
-          console.log(this.Twitss[0].posted_by._id);
+          console.log('--->', this.Twitss);
         }).catch((err) => {
           console.log(err);
         })
       },
       getProfile(){
-        this.$http.get('/users/profile',{
-          headers:{
-            Authorization : localStorage.getItem('token'),
-            contentType : "application/x-www-form-urlencoded"
-          }
-        }).then((response) => {
-          // console.log(response.data._id);
+        this.$http.get('/users/profile', this.Headers).then((response) => {
           this.Users = response.data
         }).catch((err) => {
           console.log(err);
