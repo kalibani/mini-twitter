@@ -44,7 +44,7 @@ class UserAPI {
       return data.save()
     })
     .then((updatedUser) => {
-      res.json({message: 'Succesfully Updated User', updatedUser})
+      res.json({message: 'Update Profile Success!', updatedUser})
     }).catch((err) => {
       res.send(err);
     })
