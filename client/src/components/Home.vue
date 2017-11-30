@@ -34,21 +34,15 @@
     },
     data(){
       return {
-        Twitt: { twit:'' },
-        Headers:{
-          headers:{
-            Authorization : localStorage.getItem('token'),
-            contentType : "application/x-www-form-urlencoded"
-          }
-        }
+        Twitt: { twit:'' }
       }
     },
     methods:{
       onSubmit(){
-        this.$http.post('/twitter/post',this.Twitt, this.Headers)
+        this.$http.post('/twitter/post',this.Twitt)
         .then((response) => {
           location.reload()
-          console.log('Succesfully add todo');
+          console.log('Succesfully add');
         }).catch((err) => {
           console.log(err);
         })

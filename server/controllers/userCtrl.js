@@ -33,21 +33,32 @@ class UserAPI {
     .catch((err) => { res.status(404).send(err)})
   }
 
+
   static updateProfile(req, res) {
-    User.findById(req.params.id)
-    .then((data) => {
-      return Object.assign(data, req.body)
-    })
-    .then((data) => {
+    let id = {
+      _id : req.params.id
+    }
+    if (req.body.password!=='') {
       var salt = bcrypt.genSaltSync(8)
-      data.password = bcrypt.hashSync(req.body.password, salt)
-      return data.save()
-    })
-    .then((updatedUser) => {
-      res.json({message: 'Update Profile Success!', updatedUser})
-    }).catch((err) => {
-      res.send(err);
-    })
+      req.body.password = bcrypt.hashSync(req.body.password, salt)
+      User.findByIdAndUpdate(id, req.body).then((dataUser) => {
+        res.json({message: 'Update Profile Success!', dataUser})
+      }).catch((err) => {
+        res.send(err);
+      })
+    }else {
+      let update = {
+        'email': req.body.email,
+        'name': req.body.name
+      }
+      User.findByIdAndUpdate(id, update)
+      .then((dataUser) => {
+        res.json({message: 'Update Profile tanpa ganti password Success!', dataUser})
+      }).catch((err) => {
+        res.send(err);
+      })
+    }
+
   }
 
 }

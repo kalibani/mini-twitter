@@ -35,13 +35,7 @@
         dataTwits:[],
         Users:[],
         TwitBy:[],
-        Twitss:[],
-        Headers:{
-          headers:{
-            Authorization : localStorage.getItem('token'),
-            contentType : "application/x-www-form-urlencoded"
-          }
-        }
+        Twitss:[]
       }
     },
 
@@ -56,7 +50,7 @@
     methods:{
       getAllTwitt(){
         var self = this
-        this.$http.get('/twitter/home', this.Headers).then((response) => {
+        this.$http.get('/twitter/home').then((response) => {
           this.dataTwits = response.data
           for (var i = 0; i < this.dataTwits.length; i++) {
             if (this.dataTwits[i].posted_by._id == this.Users._id) {
@@ -65,13 +59,12 @@
               this.Twitss.push(this.dataTwits[i])
             }
           }
-          console.log('--->', this.Twitss);
         }).catch((err) => {
           console.log(err);
         })
       },
       getProfile(){
-        this.$http.get('/users/profile', this.Headers).then((response) => {
+        this.$http.get('/users/profile').then((response) => {
           this.Users = response.data
         }).catch((err) => {
           console.log(err);

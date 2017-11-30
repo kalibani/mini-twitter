@@ -27,7 +27,7 @@
                   <div class="form-group">
                     <div class="row">
                       <div class="col-sm-6 col-sm-offset-3">
-                        <input type="submit" name="submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
+                        <input type="submit" name="submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Login">
                       </div>
                     </div>
                   </div>
@@ -62,7 +62,6 @@
 
 
 <script>
-  import swal from 'sweetalert'
   import $ from 'jquery'
 
   export default {
@@ -77,8 +76,7 @@
           email: '',
           password: '',
           name: ''
-        },
-        show: false
+        }
       }
     },
 
@@ -88,24 +86,23 @@
         this.$http.post('/auth/login', this.login)
         .then((response) => {
           if(!response.data.token){
-            swal({
+            this.$swal({
               title: 'Ooops',
               text: response.data,
               icon: 'error',
-              button: 'What!?'})
+              button: 'OK'})
           }else{
-            swal({
+            localStorage.setItem("token", response.data.token)
+            this.$swal({
               icon: 'success',
               text: response.data.message,
-              timer: 1000
-            })
-            localStorage.setItem("token", response.data.token)
-            setTimeout(function(){
+              button: 'OK'
+            }).then(() => {
               self.$router.push('/home')
-            }, 1100);
+            })
           }
         }).catch((err) => {
-          swal(err);
+          this.$swal(err);
         })
 
       },
@@ -113,7 +110,7 @@
       doRegister(){
         this.$http.post('/auth/register', this.register)
         .then((response) => {
-          swal({
+          this.$swal({
             icon: 'success',
             text: response.data.message,
             button: 'OK!'

@@ -1,5 +1,6 @@
 <template>
     <div class="col-xs-12">
+      
       <router-view/>
     </div>
   </template>
