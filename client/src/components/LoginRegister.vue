@@ -99,6 +99,7 @@
               button: 'OK'
             }).then(() => {
               self.$router.push('/home')
+              location.reload()
             })
           }
         }).catch((err) => {

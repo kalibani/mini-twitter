@@ -1,6 +1,6 @@
 <template>
     <div class="col-xs-12">
-      
+
       <router-view/>
     </div>
   </template>
@@ -14,5 +14,6 @@
 <style>
 body{
   padding: 30px;
+  
 }
 </style>

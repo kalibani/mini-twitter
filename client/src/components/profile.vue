@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="padding-top: 10px;">
-    <appHeader/>
+    <appHeader :user="user"/>
   <h1 class="page-header">My Profile</h1>
   <div class="row">
     <!-- left column -->
@@ -59,6 +59,7 @@
     data(){
       return {
         Profile:[],
+        user:[],
         image:'',
         password:'',
         on: {
@@ -70,7 +71,8 @@
     },
 
     beforeMount(){
-      this.getProfile()
+      this.getProfile(),
+      this.getAll()
     },
 
     computed: {
@@ -88,6 +90,20 @@
           console.log(err);
         })
       },
+
+
+      findById(){
+        var self = this
+        console.log('ini data',self.twitby.name);
+        this.$http.get('/users/profile/' +this.User._id)
+        .then((response) => {
+          console.log('-->',response.data);
+          this.profile = response.data
+          }).catch((err) => {
+          console.log(err);
+        })
+      },
+
       onFileChange(e) {
         var files = e.target.files || e.dataTransfer.files;
         if (!files.length)
@@ -104,17 +120,6 @@
         };
         reader.readAsDataURL(file);
       },
-
-      // findById(_id){
-      //   this.$http.get('/users/profile/' +_id,
-      //     this.Headers
-      //   ).then((response) => {
-      //     console.log(response.data);
-      //     Vue.set(self.$data, 'Profile', response.data)
-      //     }).catch((err) => {
-      //     console.log(err);
-      //   })
-      // },
 
       editProfile(){
         var self = this

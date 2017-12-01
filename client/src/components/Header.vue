@@ -6,7 +6,7 @@
           <router-link to="/home" class="navbar-brand glyphicon glyphicon-home"></router-link>
         </div>
         <div class="navbar-header">
-          <router-link :to="{ name: 'profile'}" class="navbar-brand glyphicon glyphicon-user">
+          <router-link :to="{ name: 'profile', params: { id: user._id} }" class="navbar-brand glyphicon glyphicon-user">
           </router-link>
         </div>
         <div class="collapse navbar-collapse">
@@ -23,6 +23,7 @@
 
 <script>
   export default {
+    props: ['user'],
     methods:{
       doLogout(){
         localStorage.removeItem("token")

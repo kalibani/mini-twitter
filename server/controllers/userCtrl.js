@@ -22,6 +22,16 @@ class UserAPI {
     }
   }
 
+  static getAll(req, res){
+    User.find()
+    .then((dataUser) => {
+      res.status(200).json(dataUser)
+    })
+    .catch((err) => {
+      res.status(404).send(err)
+    })
+  }
+
   static getProfile(req, res){
     res.json(req.decoded.dataUser)
   }

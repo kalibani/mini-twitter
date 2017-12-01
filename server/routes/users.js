@@ -3,6 +3,7 @@ const router = express.Router();
 const user = require('../controllers/userCtrl');
 
 router.get('/profile', user.validate, user.getProfile)
+router.get('/user', user.validate, user.getAll)
 router.get('/profile/:id', user.validate, user.getUserbyId)
 router.put('/updateProfile/:id', user.validate, user.updateProfile)
 
