@@ -13,7 +13,7 @@ swalPlugin.install = (Vue) => {
 Vue.use(swalPlugin)
 
 const my_axios = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:3001/api',
   headers:{
     Authorization : localStorage.getItem('token'),
     contentType : "application/x-www-form-urlencoded"
